@@ -33,6 +33,8 @@ module.exports = {
                 audio.title = audioData.title;
                 audio.url = audioData.video_url;
                 audio.location = await ytdl(audioData.video_url, { quality: "highestaudio", filter: "audioonly" });
+            } else if (args[0].includes("http")) {
+                audio.location = args[0];
             } else {
                 audio.location = fs.createReadStream(args[0])
                     .on("error", error => {
@@ -93,7 +95,7 @@ module.exports = {
             return;
         }
 
-        const streamType = ytdl.validateURL(audio.url) ? 'opus' : 'ogg/opus';
+        const streamType = ytdl.validateURL(audio.url) ? "opus" : !audio.location.includes("http") ? "ogg/opus" : "unknown";
         const dispatcher = guildQueue.connection.play(audio.location, { type: streamType, quality: [240] })
             .on("finish", () => {
                 guildQueue.songs.shift();
