@@ -1,0 +1,21 @@
+{
+  "name": "demobot",
+  "version": "1.0.0",
+  "description": "The demoman from Team Fortress 2 is now on Discord, as a bot.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "demoman"
+  ],
+  "author": "ceru1ean",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/opus": "^0.1.0",
+    "discord.js": "^12.0.2",
+    "ffmpeg-static": "^4.0.1",
+    "ytdl-core-discord": "^1.1.0"
+  }
+}
