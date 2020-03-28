@@ -10,9 +10,9 @@ module.exports = {
 
 	execute(message, args) {
 		if (message.member && message.member.voice.channel) {
-			message.client.commands.get("play").execute(message, [functions.getRandomSound("thanks", 3)]);
+			message.client.commands.get("play").execute(message, [functions.randomSound("thanks", 3)]);
 		} else {
-			message.channel.send("", { files: [functions.getRandomSound("thanks", 3)] });
+			message.channel.send("", { files: [functions.randomSound("thanks", 3)] });
 		}
 	},
 };

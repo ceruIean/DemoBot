@@ -11,11 +11,11 @@ module.exports = {
         const guildQueue = message.client.botQueue.get(message.guild.id);
 
 		if (!guildQueue) {
-			return message.channel.send("I might be drunk, but I'm not doing anything, lad!");
+			return message.channel.send("I might be drunk, but I'm not doing anything boyo!");
 		}
 
 		if (!message.member.voice.channel) {
-			return message.channel.send("You need to be in me same voice channel, lad!");
+			return message.channel.send("Ye need to be in me same voice channel, lad!");
         }
         
         if (guildQueue.connection && guildQueue.connection.dispatcher) {

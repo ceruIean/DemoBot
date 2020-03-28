@@ -11,9 +11,9 @@ module.exports = {
 
 	execute(message, args) {
 		if (message.member && message.member.voice.channel) {
-			message.client.commands.get("play").execute(message, [functions.getRandomSound("jeers", 8)]);
+			message.client.commands.get("play").execute(message, [functions.randomSound("jeers", 8)]);
 		} else {
-			message.channel.send("", { files: [functions.getRandomSound("jeers", 8)] });
+			message.channel.send("", { files: [functions.randomSound("jeers", 8)] });
 		}
 	},
 };

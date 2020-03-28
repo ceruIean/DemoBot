@@ -1,11 +1,11 @@
 module.exports = {
-    getRandomResponse(category) {
+    randomResponse(category) {
         const responses = [["I'm drunk - **you** don't have an excuse!", "I feel like every bone in me body's broke!", "Thankfully I already don't remember this.", "Bloody hell!", "Oh, me mother Tilly.", "I did what I could!", "Boooooooo!"], ["That's the way ya do it!", "If I wasn' the man I was I'd kiss ye!", "That's the spirit!", "Bloody brilliant!", "Imagine if I hadn't been drunk!", "We... did it!"]];
         const selected = Math.floor(Math.random() * responses[category].length);
         return responses[category][selected];
     },
 
-    getRandomSound(category, length) {
+    randomSound(category, length) {
         if (!category || !length) {
             return;
         }
@@ -30,11 +30,11 @@ module.exports = {
         return `./assets/images/${imageName}.png`;
     },
 
-    getRandomColor: function () {
+    randomColor: function () {
         return this.getColorInt(Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256));
     },
 
     getColorInt(r, g, b) {
         return r << 16 | g << 8 | b;
-    }
+    },
 };

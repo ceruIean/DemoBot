@@ -6,13 +6,13 @@
 // Previous Permissions: 52224
 // Current Permissions: 3202048
 
-const Discord = require("discord.js");
+const discord = require("discord.js");
 const Client = require("./client.js");
 const config = require("./config.json");
 const functions = require("./functions.js");
+const logger = require("./logger.js");
 
 const bot = new Client(config);
-
 console.log("  --- -------/------ ---  ");
 console.log("--/-- DemoBot v1.0.0 --/--");
 console.log("  --- ------/------- ---  ");
@@ -22,33 +22,36 @@ console.log("\r\nAVAILABLE COMMANDS:");
 console.log(bot.commands);
 
 bot.once("ready", () => {
-    console.log("What makes me a good DemoBot?\r\nIf I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?");
+    logger.info("What makes me a good DemoBot? If I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?\r\nReady.");
 });
 
 bot.on("message", async message => {
     const commandArgs = message.content.slice(bot.prefix.length).split(/ +/);
     const commandName = commandArgs.shift().toLowerCase();
     const command = bot.commands.get(commandName) || bot.commands.find(command => command.aliases && command.aliases.includes(commandName));
-
+    
     if (message.author.bot) {
         return;
     }
 
-    if (message.content.includes("uwu")) {
-        return bot.commands.get("uwu").execute(message, commandArgs);
-    } else if (message.content.includes("ka boom")) {
+    if (message.content.includes("ka boom")) {
         return bot.commands.get("kaboom").execute(message, commandArgs);
     }
 
     if (!message.content.startsWith(bot.prefix)) {
+        // begone, devil
+        if (message.content.includes("uwu")) {
+            return bot.commands.get("uwu").execute(message, commandArgs);
+        }
         return;
     }
 
     if (!command) {
-        return message.channel.send(`You need help lad? Type \`${bot.prefix}help\` to get started.`);
+        return message.channel.send(`What's that, lad? Type \`${bot.prefix}help\` if you need some.`);
     }
 
     if (command.restricted && !bot.owners.includes(message.author.id)) {
+        logger.info(`${message.author.id} may not execute ${commandName}`);
         return;
     }
 
@@ -57,22 +60,22 @@ bot.on("message", async message => {
     }
 
     if (command.guildOnly && !message.member) {
-        return message.channel.send("I can't do that here, you must be in a server, lad!");
+        return message.channel.send("Oh me mother Tilly. You're supposed to be in a server, lad!");
     }
     
     if (!bot.cooldowns.has(commandName)) {
-        bot.cooldowns.set(commandName, new Discord.Collection());
+        bot.cooldowns.set(commandName, new discord.Collection());
     }
 
     const currentTime = Date.now();
     const callTimestamps = bot.cooldowns.get(commandName);
-    const cooldownSeconds = (command.cooldown) * 1000;
+    const cooldownSeconds = 1000 * (command.cooldown);
 
     if (callTimestamps.has(message.author.id)) {
         const nextValidTime = callTimestamps.get(message.author.id) + cooldownSeconds;
         if (currentTime < nextValidTime) {
             const delta = (nextValidTime - currentTime) / 1000;
-            return message.channel.send(`I need ${delta.toFixed(1)} seconds before I can do that, lad.`);
+            return message.channel.send(`I need exactly ${delta.toFixed(2)} seconds before I can do that, lad! Trust me!`);
         }
     }
 
@@ -81,19 +84,22 @@ bot.on("message", async message => {
 
     try {
         if (message.member) {
-            console.log(`[${new Date().toLocaleDateString()}][${message.guild.name} / ${message.guild.id}] ${message.member.displayName} (${message.author.tag} / ${message.author.id}) : ${message.content}`);
+            logger.info(`[${message.guild.name} / ${message.guild.id}] ${message.member.displayName} (${message.author.tag} / ${message.author.id}) : ${message.content}`, true);
         } else {
-            console.log(`[${new Date().toLocaleDateString()}] ${message.author.username} (${message.author.tag} / ${message.author.id}) : ${message.content}`);
+            logger.info(`${message.author.username} (${message.author.tag} / ${message.author.id}) : ${message.content}`, true);
         }
-        command.execute(message, commandArgs);
+        await command.execute(message, commandArgs);
+        if (command.reaction) {
+            message.react(command.reaction);
+        }
     } catch (error) {
-        console.error(error);
-        message.channel.send(functions.getRandomResponse(0));
+        logger.error(error);
+        message.channel.send(`Something went wrong! ${functions.randomResponse(0)}`);
     }
 });
 
 bot.once("disconnect", () => {
-    console.log("I'm out, lad!");
+    logger.info("DemoBot is out, lads!");
 });
 
 bot.login(bot.token);

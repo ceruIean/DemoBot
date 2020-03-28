@@ -1,15 +1,17 @@
 const fs = require("fs");
-const functions = require("../functions.js");
 const ytdl = require("ytdl-core-discord");
+const functions = require("../functions.js");
+const logger = require("../logger.js");
 
 module.exports = {
     name: "play",
     aliases: ["p"],
-    description: "Starts playing audio in voicechat.",
+    description: "I'll join your voice channel and sing ya something, lad!",
     category: "voice",
-    usage: "<url> [volumeMult]",
+    usage: "<url> [volumeMultiplier]",
     guildOnly: true,
     restricted: false,
+    reaction: "⏯️",
 
     async execute(message, args) {
         try {
@@ -18,7 +20,7 @@ module.exports = {
             const voiceChannel = message.member.voice.channel;
 
             if (!voiceChannel) {
-                return message.channel.send(functions.getRandomText(0));
+                return message.channel.send("You must be in me same voice channel, mate!");
             }
 
             let audio = {
@@ -32,12 +34,13 @@ module.exports = {
                 const audioData = await ytdl.getInfo(args[0]);
                 audio.title = audioData.title;
                 audio.url = audioData.video_url;
-                audio.location = await ytdl(audioData.video_url, { quality: "highestaudio", filter: "audioonly" });
+                audio.location = await ytdl(audioData.video_url, { quality: "lowestaudio", filter: "audioonly" });
             } else if (args[0].includes("http")) {
                 audio.location = args[0];
             } else {
                 audio.location = fs.createReadStream(args[0])
                     .on("error", error => {
+                        logger.info();
                         audio.location = fs.createReadStream(functions.getSound(args[0]))
                             .on("error", error => {
                                 console.error(error);
@@ -52,8 +55,7 @@ module.exports = {
                     textChannel: message.channel,
                     voiceChannel: voiceChannel,
                     connection: null,
-                    songs: [],
-                    playing: true
+                    songs: []
                 };
 
                 botQueue.set(message.guild.id, guildQueue);
@@ -95,7 +97,7 @@ module.exports = {
             return;
         }
 
-        const streamType = ytdl.validateURL(audio.url) ? "opus" : !audio.location.includes("http") ? "ogg/opus" : "unknown";
+        const streamType = ytdl.validateURL(audio.url) ? "opus" : !audio.title.includes("http") ? "ogg/opus" : "unknown";
         const dispatcher = guildQueue.connection.play(audio.location, { type: streamType, quality: [240] })
             .on("finish", () => {
                 guildQueue.songs.shift();
