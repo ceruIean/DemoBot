@@ -1,0 +1,5 @@
+{
+    "token": "https://discordapp.com/developers/applications",
+    "botOwners": ["Discord IDs"],
+    "botPrefix": "-"
+}
