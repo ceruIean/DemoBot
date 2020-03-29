@@ -2,7 +2,7 @@
   "name": "demobot",
   "version": "1.0.0",
   "description": "The demoman from Team Fortress 2 is now on Discord, as a bot.",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
     "start": "node ."
   },
