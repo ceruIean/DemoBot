@@ -1,8 +1,8 @@
 const logger = require("../logger.js");
 
 module.exports = {
-	name: "suicide",
-	aliases: ["kill", "die"],
+	name: "kill",
+	aliases: ["quit", "die"],
 	description: "Kills the process.",
 	category: "",
 	usage: "",
@@ -10,9 +10,9 @@ module.exports = {
 	restricted: true,
 	reaction: "💤",
 
-	execute(message, args) {
-		logger.info("I don't think they saw that one coming!");
-        message.react(this.reaction).then(() => {
+	execute(message) {
+		logger.info("See");
+		message.react(this.reaction).then(() => {
 			process.exit();
 		});
 	},

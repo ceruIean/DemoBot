@@ -1,33 +1,33 @@
-const discord = require('discord.js');
+const discord = require("discord.js");
 
 module.exports = {
-    name: "nowplaying",
-    aliases: ["np"],
-    description: "hohohohoho",
-    category: "voice",
-    usage: "",
-    guildOnly: true,
-    restricted: false,
-    reaction: "",
+	name: "nowplaying",
+	aliases: ["np"],
+	description: "hohohohoho",
+	category: "voice",
+	usage: "",
+	guildOnly: true,
+	restricted: false,
+	reaction: "",
 
-    execute(message, args) {
-        const guildQueue = message.client.botQueue.get(message.guild.id);
+	execute(message) {
+		const guildQueue = message.client.botQueue.get(message.guild.id);
 
-        if (!guildQueue || !guildQueue.connection || !guildQueue.connection.dispatcher) {
-            message.channel.send("I might be drunk, but I'm not doing anything boyo!");
-            return;
-        }
+		if (!guildQueue || !guildQueue.connection || !guildQueue.connection.dispatcher) {
+			message.channel.send("I might be drunk, but I'm not doing anything boyo!");
+			return;
+		}
 
-        if (!message.member.voice.channel) {
-            message.channel.send("Ye need to be in me same voice channel, lad!");
-            return;
-        }
+		if (!message.member.voice.channel) {
+			message.channel.send("Ye need to be in me same voice channel, lad!");
+			return;
+		}
 
-        const messageEmbed = new discord.MessageEmbed()
-            .setTitle("Now Playing")
-            .setDescription(guildQueue.songs[0].url ? `[${guildQueue.songs[0].title}](${guildQueue.songs[0].url})` : guildQueue.songs[0].title);
+		const messageEmbed = new discord.MessageEmbed()
+			.setTitle("Now Playing")
+			.setDescription(guildQueue.songs[0].url ? `[${guildQueue.songs[0].title}](${guildQueue.songs[0].url})` : guildQueue.songs[0].title);
 
-        message.channel.send(messageEmbed);
-        return true;
-    }
-}
+		message.channel.send(messageEmbed);
+		return true;
+	},
+};

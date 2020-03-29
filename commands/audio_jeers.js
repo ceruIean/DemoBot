@@ -10,10 +10,11 @@ module.exports = {
 	restricted: false,
 	reaction: "👎",
 
-	execute(message, args) {
+	execute(message) {
 		if (message.member && message.member.voice.channel) {
 			message.client.commands.get("play").execute(message, [functions.randomSound("jeers", 8)]);
-		} else {
+		}
+		else {
 			message.channel.send("", { files: [functions.randomSound("jeers", 8)] });
 		}
 	},
