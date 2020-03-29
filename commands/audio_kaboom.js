@@ -8,12 +8,13 @@ module.exports = {
 	usage: "",
 	guildOnly: false,
 	restricted: false,
+	reaction: "💥",
 
 	execute(message, args) {
 		if (message.member && message.member.voice.channel) {
-			message.client.commands.get("play").execute(message, [functions.getSound("ka_boom"), "50"]);
-		} else {
-			message.channel.send("ka boom", { files: [functions.getSound("ka_boom")] });
+			message.client.commands.get("play").execute(message, [functions.getSound("ka_boom"), 1 << 4]);
 		}
+		
+		message.channel.send("", { files: [functions.getImage("ka_boom.gif")] });
 	},
 };

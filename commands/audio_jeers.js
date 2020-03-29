@@ -8,6 +8,7 @@ module.exports = {
 	usage: "",
 	guildOnly: false,
 	restricted: false,
+	reaction: "👎",
 
 	execute(message, args) {
 		if (message.member && message.member.voice.channel) {

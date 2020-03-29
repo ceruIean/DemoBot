@@ -7,12 +7,12 @@
 // Current Permissions: 3202048
 
 const discord = require("discord.js");
-const Client = require("./client.js");
+const client = require("./client.js");
 const config = require("./config.json");
 const functions = require("./functions.js");
 const logger = require("./logger.js");
 
-const bot = new Client(config);
+const bot = new client(config);
 console.log("  --- -------/------ ---  ");
 console.log("--/-- DemoBot v1.0.0 --/--");
 console.log("  --- ------/------- ---  ");
@@ -23,6 +23,7 @@ console.log(bot.commands);
 
 bot.once("ready", () => {
     logger.info("What makes me a good DemoBot? If I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?\r\nReady.");
+    bot.user.setActivity("ya", { type: "LISTENING" });
 });
 
 bot.on("message", async message => {
@@ -35,6 +36,7 @@ bot.on("message", async message => {
     }
 
     if (message.content.includes("ka boom")) {
+        message.react("💥");
         return bot.commands.get("kaboom").execute(message, commandArgs);
     }
 
@@ -51,24 +53,24 @@ bot.on("message", async message => {
     }
 
     if (command.restricted && !bot.owners.includes(message.author.id)) {
-        logger.info(`${message.author.id} may not execute ${commandName}`);
+        logger.info(`${message.author.id} tried to execute "${command.name}"`);
         return;
     }
 
     if (command.usage && !commandArgs.length) {
-        return message.channel.send(`${bot.prefix}${commandName} \`${command.usage}\``);
+        return message.channel.send(`${bot.prefix}${command.name} \`${command.usage}\``);
     }
 
     if (command.guildOnly && !message.member) {
         return message.channel.send("Oh me mother Tilly. You're supposed to be in a server, lad!");
     }
     
-    if (!bot.cooldowns.has(commandName)) {
-        bot.cooldowns.set(commandName, new discord.Collection());
+    if (!bot.cooldowns.has(command.name)) {
+        bot.cooldowns.set(command.name, new discord.Collection());
     }
 
     const currentTime = Date.now();
-    const callTimestamps = bot.cooldowns.get(commandName);
+    const callTimestamps = bot.cooldowns.get(command.name);
     const cooldownSeconds = 1000 * (command.cooldown);
 
     if (callTimestamps.has(message.author.id)) {
@@ -88,8 +90,7 @@ bot.on("message", async message => {
         } else {
             logger.info(`${message.author.username} (${message.author.tag} / ${message.author.id}) : ${message.content}`, true);
         }
-        await command.execute(message, commandArgs);
-        if (command.reaction) {
+        if (command.execute(message, commandArgs) && command.reaction) {
             message.react(command.reaction);
         }
     } catch (error) {

@@ -4,9 +4,11 @@ module.exports = {
 	name: "thanks",
 	aliases: ["thx"],
 	description: "An expression of gratitude.",
+	category: "audio",
 	usage: "",
 	guildOnly: false,
 	restricted: false,
+	reaction: "",
 
 	execute(message, args) {
 		if (message.member && message.member.voice.channel) {

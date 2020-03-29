@@ -27,7 +27,7 @@ module.exports = {
             return;
         }
 
-        return `./assets/images/${imageName}.png`;
+        return `./assets/images/${imageName}`;
     },
 
     randomColor: function () {

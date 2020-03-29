@@ -1,14 +1,21 @@
 module.exports = {
-    
-    info(message, nl) {
-        if (nl) {
-            console.log("\r\n");
-        }
-
+    log(message) {
         console.log(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}] ${message}`);
     },
 
-    error(message, nl) {
-        this.info(`[ERROR] ${message}`, nl);
+    info(message) {
+        this.log(`[INFO] ${message}`);
+    },
+
+    warn(message) {
+        this.log(`[WARN] ${message}`);
+    },
+
+    error(message) {
+        this.log(`[ERROR] ${message}`);
+    },
+
+    debug(message) {
+        this.log(`[DEBUG] ${message}`);
     }
 }
