@@ -4,7 +4,7 @@ module.exports = {
 	name: "kill",
 	aliases: ["quit", "die"],
 	description: "Kills the process.",
-	category: "",
+	category: "owner",
 	usage: "",
 	guildOnly: false,
 	restricted: true,

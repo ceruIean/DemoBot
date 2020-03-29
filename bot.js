@@ -17,8 +17,8 @@ console.log("\r\nAVAILABLE COMMANDS:");
 console.log(bot.commands);
 
 bot.once("ready", () => {
-	logger.info("What makes me a good DemoBot? If I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?\r\nReady.");
-	bot.user.setActivity("ya", { type: "LISTENING" });
+	logger.info("What makes me a good DemoBot? If I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?");
+	bot.user.setActivity("ya!", { type: "LISTENING" });
 });
 
 bot.on("message", async message => {
@@ -81,10 +81,10 @@ bot.on("message", async message => {
 
 	try {
 		if (message.member) {
-			logger.info(`[${message.guild.name} / ${message.guild.id}] ${message.member.displayName} (${message.author.tag} / ${message.author.id}) : ${message.content}`, true);
+			logger.info(`[GUILD MESSAGE] [${message.guild.id} / ${message.author.id}] [${message.guild.name} / ${message.author.tag}]: ${message.content}`, true);
 		}
 		else {
-			logger.info(`${message.author.username} (${message.author.tag} / ${message.author.id}) : ${message.content}`, true);
+			logger.info(`[DIRECT MESSAGE] [${message.author.id} / ${message.author.tag}]: ${message.content}`, true);
 		}
 
 		if (command.execute(message, commandArgs) && command.reaction) {

@@ -4,7 +4,7 @@ module.exports = {
 	name: "reload",
 	aliases: ["r"],
 	description: "Reloads a command for debugging purposes.",
-	category: "",
+	category: "owner",
 	usage: "<command | all>",
 	guildOnly: false,
 	restricted: true,
@@ -20,11 +20,10 @@ module.exports = {
 			return true;
 		}
 
-		this.reloadCommand(message, commandName);
+		return this.reloadCommand(message, commandName);
 	},
 
 	reloadCommand(message, commandName) {
-		logger.debug(`Reloading "${commandName}"`);
 		delete require.cache[require.resolve(`./${commandName}.js`)];
 
 		try {
@@ -33,6 +32,9 @@ module.exports = {
 		}
 		catch (error) {
 			logger.error(error);
+		}
+		finally {
+			logger.debug(`Succesfully reloaded "${commandName}"`);
 		}
 	},
 };

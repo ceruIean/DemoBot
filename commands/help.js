@@ -14,9 +14,12 @@ module.exports = {
 
 	execute(message) {
 		const commandList = [];
+		const commandCategories = [ "" ];
+
 		fs.readdirSync("./commands").filter(file => file.endsWith(".js") && !file.includes(this.name)).forEach(file => {
 			const command = require(`./${file}`);
 			commandList.push(command);
+			commandCategories.push(command.category);
 		});
 
 		const messageEmbed = new discord.MessageEmbed()
@@ -27,18 +30,16 @@ module.exports = {
 			.setDescription(this.description)
 			.setTimestamp();
 
-		messageEmbed.addField("\u200B", "\u200B");
-		commandList.filter(command => !command.restricted).forEach(command => {
-			const fieldTitle = command.usage ? `\`${message.client.prefix}${command.name}\`  \`${command.usage}\`` : `\`${message.client.prefix}${command.name}\``;
-			messageEmbed.addField(fieldTitle, command.description, false);
-		});
+		for (let i = 1; i < commandCategories.length; i++) {
+			const command = commandList[i - 1];
+			if (!command.restricted || (command.restricted && message.client.owners.includes(message.author.id))) {
+				if (commandCategories[i - 1] != commandCategories[i]) {
+					messageEmbed.addField("\u200B", `${commandCategories[i].charAt(0).toUpperCase()}${commandCategories[i].slice(1).toLowerCase()} commands:`);
+				}
 
-		if (message.client.owners.includes(message.author.id)) {
-			messageEmbed.addField("\u200B", "Restricted commands:");
-			commandList.filter(command => command.restricted).forEach(command => {
 				const fieldTitle = command.usage ? `\`${message.client.prefix}${command.name}\`  \`${command.usage}\`` : `\`${message.client.prefix}${command.name}\``;
 				messageEmbed.addField(fieldTitle, command.description, false);
-			});
+			}
 		}
 
 		message.channel.send(messageEmbed);

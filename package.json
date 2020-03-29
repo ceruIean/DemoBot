@@ -4,7 +4,8 @@
   "description": "The demoman from Team Fortress 2 is now on Discord, as a bot.",
   "main": "bot.js",
   "scripts": {
-    "start": "node ."
+    "start": "pm2 start bot.js --name \"demobot\" --output logs/output.log --error logs/error.log",
+    "lint": "eslint ."
   },
   "keywords": [
     "discord",
@@ -18,6 +19,7 @@
     "discord.js": "^12.0.2",
     "eslint": "^6.8.0",
     "ffmpeg-static": "^4.0.1",
+    "pm2": "^4.2.3",
     "sodium": "^3.0.2",
     "utf-8-validate": "^5.0.2",
     "ytdl-core-discord": "^1.1.0"
