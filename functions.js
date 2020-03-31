@@ -11,7 +11,7 @@ module.exports = {
 		}
 
 		const selected = Math.floor(Math.random() * length);
-		return this.getSound(`${category}/${selected}/${category}`);
+		return `${category}/${selected}/${category}`;
 	},
 
 	getSound(soundName) {

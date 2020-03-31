@@ -10,7 +10,7 @@ module.exports = class extends discord.Client {
 		this.prefix = config.botPrefix;
 		this.commands = new discord.Collection();
 		this.cooldowns = new discord.Collection();
-		this.botQueue = new Map();
+		this.guildMap = new Map();
 
 		fileSystem.readdirSync("./commands").filter(file => file.endsWith(".js")).forEach(file => {
 			const command = require(`./commands/${file}`);

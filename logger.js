@@ -1,21 +1,17 @@
 module.exports = {
-	log(message) {
-		console.log(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}] ${message}`);
-	},
-
 	info(message) {
-		this.log(`[INFO] ${message}`);
+		console.log(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][INFO] ${message}`);
 	},
 
 	warn(message) {
-		this.log(`[WARN] ${message}`);
+		console.warn(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][WARN] ${message}`);
 	},
 
 	error(message) {
-		this.log(`[ERROR] ${message}`);
+		console.error(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][ERROR] ${message}`);
 	},
 
 	debug(message) {
-		this.log(`[DEBUG] ${message}`);
+		console.log(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][DEBUG] ${message}`);
 	},
 };

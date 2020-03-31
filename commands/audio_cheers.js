@@ -11,11 +11,6 @@ module.exports = {
 	reaction: "👍",
 
 	execute(message) {
-		if (message.member && message.member.voice.channel) {
-			message.client.commands.get("play").execute(message, [functions.randomSound("cheers", 8)]);
-		}
-		else {
-			message.channel.send("", { files: [functions.randomSound("cheers", 8)] });
-		}
+		message.client.commands.get("audio").execute(message, [functions.randomSound("cheers", 8)]);
 	},
 };

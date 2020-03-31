@@ -42,6 +42,7 @@ module.exports = {
 			}
 		}
 
-		message.channel.send(messageEmbed);
+		message.channel.send("I've just sent you what you'll need!");
+		message.author.send(messageEmbed);
 	},
 };

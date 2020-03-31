@@ -11,10 +11,8 @@ module.exports = {
 	reaction: "💥",
 
 	execute(message) {
-		if (message.member && message.member.voice.channel) {
-			message.client.commands.get("play").execute(message, [functions.getSound("ka_boom"), 1 << 4]);
-		}
-
-		message.channel.send("", { files: [functions.getImage("ka_boom.png")] });
+		message.channel.send("", { files: [functions.getImage("ka_boom.png")] }).then(() => {
+			message.client.commands.get("audio").execute(message, [ "ka_boom", 1 << 4 ]);
+		});
 	},
 };

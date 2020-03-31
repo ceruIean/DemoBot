@@ -1,6 +1,5 @@
 const fs = require("fs");
 const ytdl = require("ytdl-core-discord");
-const functions = require("../functions.js");
 const logger = require("../logger.js");
 
 module.exports = {
@@ -14,100 +13,107 @@ module.exports = {
 	reaction: "▶️",
 
 	async execute(message, args) {
-		try {
-			const botQueue = message.client.botQueue;
-			const currentSession = botQueue.get(message.guild.id);
-			const voiceChannel = message.member.voice.channel;
+		const guildQueue = message.client.guildMap.get(message.guild.id);
+		const audio = {
+			title: args[0],
+			url: "",
+			location: "",
+			volume: args[1] || false,
+			type: "unknown",
+		};
 
-			if (!voiceChannel) {
-				message.channel.send("You must be in me same voice channel, mate!");
-				return;
-			}
+		if (!message.member.voice.channel) {
+			message.channel.send("You must be in me same voice channel, mate!");
+			return false;
+		}
 
-			let audio = {
-				title: args[0],
-				url: "",
-				location: args[0],
-				volume: args[1] || false,
-			};
+		if (ytdl.validateURL(args[0])) {
+			const audioData = await ytdl.getInfo(args[0]);
+			audio.title = audioData.title;
+			audio.url = audioData.video_url;
+			audio.location = await ytdl(audio.url, { filter: "audioonly" }).on("error", error => {
+				logger.error(error.message);
+				logger.error("porcodio");
+			});
+			audio.type = "opus";
+			logger.info("Playing audio from YouTube.");
+		}
+		else if (!args[0].match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g)) {
+			const stream = fs.createReadStream(args[0]).on("open", () => {
+				audio.location = stream;
+				audio.type = "ogg/opus";
+				logger.info("Playing audio from local file.");
+			}).on("error", error => {
+				logger.error(error.message);
+				message.channel.send("Where the bloody hell is that?");
+				return false;
+			});
+		}
+		else {
+			audio.url = audio.location = args[0];
+			logger.info("Playing audio from remote file.");
+		}
 
-			if (ytdl.validateURL(args[0])) {
-				const audioData = await ytdl.getInfo(args[0]);
-				audio.title = audioData.title;
-				audio.url = audioData.video_url;
-				audio.location = await ytdl(audio.url, { filter: "audioonly" });
-			}
-			else if (!args[0].includes("http")) {
-				audio.location = fs.createReadStream(args[0])
-					.on("error", () => {
-						audio.location = fs.createReadStream(functions.getSound(args[0]))
-							.on("error", () => {
-								audio = false;
-								message.channel.send("Where the bloody hell is that?");
-								return;
-							});
-					});
-			}
-
-			if (!currentSession) {
-				const guildQueue = {
+		if (audio.location != null) {
+			if (!guildQueue) {
+				const guildSession = {
 					textChannel: message.channel,
-					voiceChannel: voiceChannel,
+					voiceChannel: message.member.voice.channel,
 					connection: null,
-					songs: [],
+					audioQueue: [],
 				};
 
-				botQueue.set(message.guild.id, guildQueue);
-				guildQueue.songs.push(audio);
+				message.client.guildMap.set(message.guild.id, guildSession);
+				guildSession.audioQueue.push(audio);
 
-				voiceChannel.join().then(connection => {
-					guildQueue.connection = connection;
-					this.play(message, guildQueue.songs[0]);
+				guildSession.voiceChannel.join().then(connection => {
+					guildSession.connection = connection;
+					return this.play(message, guildSession.audioQueue[0]);
 				}).catch(error => {
 					logger.error(error);
-					botQueue.delete(message.guild.id);
-					return;
+					message.client.guildMap.delete(message.guild.id);
+					return false;
 				});
 			}
 			else {
-				if (ytdl.validateURL(args[0])) {
+				if (audio.url) {
 					message.channel.send(`"${audio.title}" is comin' up, lad!`);
 				}
-
-				currentSession.songs.push(audio);
+				guildQueue.audioQueue.push(audio);
 			}
 		}
-		catch (error) {
-			logger.error(error);
-			message.channel.send(error.message);
+		else {
+			return false;
 		}
 	},
 
 	play(message, audio) {
-		const botQueue = message.client.botQueue;
-		const guildQueue = botQueue.get(message.guild.id);
+		const guildQueue = message.client.guildMap.get(message.guild.id);
 
-		if (!audio || audio.location.ended || audio.location.destroyed) {
+		if (!audio || !audio.location || audio.location.ended || audio.location.destroyed) {
+			message.client.guildMap.delete(message.guild.id);
 			guildQueue.voiceChannel.leave();
-			botQueue.delete(message.guild.id);
-			return;
+			return false;
 		}
 
-		const streamType = ytdl.validateURL(audio.url) ? "opus" : !audio.title.includes("http") ? "ogg/opus" : "unknown";
-		guildQueue.connection.play(audio.location, { type: streamType, highWaterMark: 1 << 24, volume: audio.volume })
-			.on("finish", () => {
-				guildQueue.songs.shift();
-				this.play(message, guildQueue.songs[0], audio.volume);
-			})
-			.on("close", () => {
-				guildQueue.songs.shift();
-				this.play(message, guildQueue.songs[0], audio.volume);
-			})
-			.on("error", error => {
-				logger.error(error);
-			});
-
-		logger.info(`[${message.guild.name} / ${guildQueue.voiceChannel.name}] Currently playing: "${audio.title}" (volume: ${audio.volume})`);
-		// dispatcher.setVolumeLogarithmic(audio.volume);
+		try {
+			guildQueue.connection.play(audio.location, { volume: audio.volume, type: audio.type, highWaterMark: 1 << 24 })
+				.on("finish", () => {
+					guildQueue.audioQueue.shift();
+					this.play(message, guildQueue.audioQueue[0], audio.volume);
+				})
+				.on("close", () => {
+					guildQueue.audioQueue.shift();
+					this.play(message, guildQueue.audioQueue[0], audio.volume);
+				})
+				.on("error", error => {
+					logger.error(error);
+					logger.error("ALICE ALICE ALICECECEC ti amo tanto lo sai? si che lo sai <3");
+				});
+		}
+		catch (error) {
+			logger.error(error.message);
+			logger.error("BRUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUH");
+		}
 	},
 };

@@ -4,7 +4,7 @@ module.exports = {
 	name: "reload",
 	aliases: ["r"],
 	description: "Reloads a command for debugging purposes.",
-	category: "owner",
+	category: "admin",
 	usage: "<command | all>",
 	guildOnly: false,
 	restricted: true,

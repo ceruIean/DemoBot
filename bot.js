@@ -8,17 +8,21 @@ const functions = require("./functions.js");
 const logger = require("./logger.js");
 
 const bot = new client(config);
-console.log("  --- -------/------ ---  ");
-console.log("--/-- DemoBot v1.0.0 --/--");
-console.log("  --- ------/------- ---  ");
-console.log("\r\nBOT OWNER(S):");
-console.log(bot.owners);
-console.log("\r\nAVAILABLE COMMANDS:");
-console.log(bot.commands);
+logger.info(" _____     ______     __    __     ______     ______     ______     ______  ");
+logger.info("/\\  __-.  /\\  ___\\   /\\ \"-./  \\   /\\  __ \\   /\\  == \\   /\\  __ \\   /\\__  _\\ ");
+logger.info("\\ \\ \\/\\ \\ \\ \\  __\\   \\ \\ \\-./\\ \\  \\ \\ \\/\\ \\  \\ \\  __<   \\ \\ \\/\\ \\  \\/_/\\ \\/ ");
+logger.info(" \\ \\____-  \\ \\_____\\  \\ \\_\\ \\ \\_\\  \\ \\_____\\  \\ \\_____\\  \\ \\_____\\    \\ \\_\\ ");
+logger.info("  \\/____/   \\/_____/   \\/_/  \\/_/   \\/_____/   \\/_____/   \\/_____/     \\/_/ \r\n");
+
+logger.debug("BOT OWNER(S):");
+logger.debug(`${bot.owners.join(", ")}\r\n`);
+logger.debug("AVAILABLE COMMANDS:");
+logger.debug(`${[...bot.commands.keys()].join(", ")}\r\n`);
 
 bot.once("ready", () => {
 	logger.info("What makes me a good DemoBot? If I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?");
 	bot.user.setActivity("ya!", { type: "LISTENING" });
+	process.send("ready");
 });
 
 bot.on("message", async message => {
@@ -38,18 +42,16 @@ bot.on("message", async message => {
 	if (!message.content.startsWith(bot.prefix)) {
 		// begone, devil
 		if (message.content.includes("uwu")) {
-			return bot.commands.get("uwu").execute(message, commandArgs);
+			message.client.commands.get("audio").execute(message, [ "uwu", 1 << 4 ]);
 		}
 		return;
 	}
 
-	if (!command) {
+	if (!command || !bot.owners.includes(message.author.id) && (command.restricted || command.hidden)) {
+		if (command.restricted) {
+			logger.info(`${message.author.id} cannot execute "${command.name}"`);
+		}
 		return message.channel.send(`What's that, lad? Type \`${bot.prefix}help\` if you need some.`);
-	}
-
-	if (command.restricted && !bot.owners.includes(message.author.id)) {
-		logger.info(`${message.author.id} tried to execute "${command.name}"`);
-		return;
 	}
 
 	if (command.usage && !commandArgs.length) {
@@ -99,6 +101,13 @@ bot.on("message", async message => {
 
 bot.once("disconnect", () => {
 	logger.info("DemoBot is out, lads!");
+});
+
+process.on("message", function(message) {
+	if (message == "shutdown") {
+		logger.info("DemoBot is out, lads!\r\n");
+		process.exit(0);
+	}
 });
 
 bot.login(bot.token);
