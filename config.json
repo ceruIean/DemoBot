@@ -1,5 +1,6 @@
 {
+    "owners": ["Discord ID", "Discord ID"],
+    "prefix": "-",
     "token": "https://discordapp.com/developers/applications",
-    "botOwners": ["Discord IDs"],
-    "botPrefix": "-"
+    "youtubeToken" : "https://console.developers.google.com/apis/dashboard"
 }
