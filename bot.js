@@ -29,11 +29,11 @@ logger.debug(`${[...bot.commands.keys()].join(", ")}\r\n`);
 bot.once("ready", () => {
 	logger.info("What makes me a good DemoBot? If I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?");
 
-	if (process.env.NODE_ENV === "production") {
-		bot.user.setPresence({ activity: { type: "LISTENING", name: "ya, lad!" }, status: "online" });
+	if (process.env.NODE_ENV === "development") {
+		bot.user.setPresence({ activity: { name: "with variables" }, status: "dnd" });
 	}
 	else {
-		bot.user.setPresence({ activity: { name: "with variables" }, status: "dnd" });
+		bot.user.setPresence({ activity: { type: "LISTENING", name: "ya, lad!" }, status: "online" });
 	}
 });
 
@@ -58,7 +58,7 @@ bot.on("message", async message => {
 		return;
 	}
 
-	if (!process.env.NODE_ENV === "production" && !bot.admins.includes(message.author.id)) {
+	if (process.env.NODE_ENV === "development" && !bot.admins.includes(message.author.id)) {
 		return message.channel.send("I'm sorry, lad, but I'm under development right now! Try again later.");
 	}
 
