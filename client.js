@@ -10,7 +10,7 @@ module.exports = class extends discord.Client {
 		if (!config) {
 			logger.debug("Constructing client...");
 
-			if (process.env.NODE_ENV === "development") {
+			if (process.env.NODE_ENV !== "production") {
 				require("dotenv-flow").config();
 			}
 
@@ -46,5 +46,7 @@ module.exports = class extends discord.Client {
 				logger.error(error.message);
 			}
 		}
+
+		logger.debug("Done!\r\n");
 	}
 };

@@ -1,19 +1,36 @@
 module.exports = {
+	log(message, level) {
+		let prefix = "";
+		if (process.env.NODE_ENV !== "production") {
+			prefix = `[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}]`;
+		}
+
+		console.log(`${prefix}${level} ${message}`);
+	},
+
 	info(message) {
-		console.log(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][INFO] ${message}`);
-	},
-
-	warn(message) {
-		console.warn(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][WARN] ${message}`);
-	},
-
-	error(message) {
-		console.error(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][ERROR] ${message}`);
+		this.log(message, "[INFO]");
 	},
 
 	debug(message) {
-		if (process.env.NODE_ENV === "development") {
-			console.log(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][DEBUG] ${message}`);
+		this.log(message, "[DEBUG]");
+	},
+
+	warn(message) {
+		let prefix = "";
+		if (process.env.NODE_ENV !== "production") {
+			prefix = `[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}] `;
 		}
+
+		console.warn(`${prefix}${message}`);
+	},
+
+	error(message) {
+		let prefix = "";
+		if (process.env.NODE_ENV !== "production") {
+			prefix = `[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}] `;
+		}
+
+		console.error(`${prefix}${message}`);
 	},
 };

@@ -29,11 +29,11 @@ logger.debug(`${[...bot.commands.keys()].join(", ")}\r\n`);
 bot.once("ready", () => {
 	logger.info("What makes me a good DemoBot? If I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?");
 
-	if (process.env.NODE_ENV === "development") {
-		bot.user.setPresence({ activity: { name: "with variables" }, status: "dnd" });
+	if (process.env.NODE_ENV === "production") {
+		bot.user.setPresence({ activity: { type: "LISTENING", name: "ya, lad!" }, status: "online" });
 	}
 	else {
-		bot.user.setPresence({ activity: { type: "LISTENING", name: "ya, lad!" }, status: "online" });
+		bot.user.setPresence({ activity: { name: "with variables" }, status: "dnd" });
 	}
 });
 
@@ -116,11 +116,12 @@ bot.on("message", async message => {
 
 process.on("message", message => {
 	if (message == "shutdown") {
-		logger.info("DemoBot is out, lads!\r\n");
+		logger.info("DemoBot is out, lads!");
 		process.exit(0);
 	}
 });
 
 bot.login(process.env.DISCORD_TOKEN).catch(error => {
 	logger.error(error.message);
+	process.exit(1);
 });
