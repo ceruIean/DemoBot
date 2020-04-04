@@ -1,5 +1,4 @@
 const fileSystem = require("fs");
-const dotenv = require("dotenv");
 const discord = require("discord.js");
 const logger = require("./util/logger.js");
 
@@ -10,7 +9,10 @@ module.exports = class extends discord.Client {
 
 		if (!config) {
 			logger.debug("Constructing client...");
-			dotenv.config();
+
+			if (process.env.NODE_ENV === "development") {
+				require("dotenv-flow").config();
+			}
 
 			this.commands = new discord.Collection();
 			this.cooldowns = new discord.Collection();
