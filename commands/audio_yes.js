@@ -1,4 +1,4 @@
-const functions = require("../functions.js");
+const functions = require("../util/functions.js");
 
 module.exports = {
 	name: "yes",
@@ -11,6 +11,6 @@ module.exports = {
 	reaction: "",
 
 	execute(message) {
-		message.client.commands.get("audio").execute(message, [functions.randomSound("yes", 3)]);
+		return message.client.commands.get("audio").execute(message, [functions.randomSound("yes", 3)]);
 	},
 };

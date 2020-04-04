@@ -1,5 +1,5 @@
 const fs = require("fs");
-const functions = require("../functions.js");
+const functions = require("../util/functions.js");
 const discord = require("discord.js");
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
 
 		for (let i = 1; i < commandCategories.length; i++) {
 			const command = commandList[i - 1];
-			if (!command.restricted || (command.restricted && message.client.owners.includes(message.author.id))) {
+			if (!command.restricted || (command.restricted && message.client.admins.includes(message.author.id))) {
 				if (commandCategories[i - 1] != commandCategories[i]) {
 					messageEmbed.addField("\u200B", `${commandCategories[i].charAt(0).toUpperCase()}${commandCategories[i].slice(1).toLowerCase()} commands:`);
 				}
@@ -42,7 +42,7 @@ module.exports = {
 			}
 		}
 
-		message.channel.send("I've just sent you what you'll need!");
-		message.author.send(messageEmbed);
+		message.channel.send("I've just sent you what you'll need, lad!");
+		return message.author.send(messageEmbed);
 	},
 };

@@ -1,6 +1,6 @@
 module.exports = {
 	name: "stop",
-	aliases: ["s", "leave"],
+	aliases: ["st", "leave"],
 	description: "Stops playing audio from voicechat and leaves the channel.",
 	category: "voice",
 	usage: "",
@@ -22,7 +22,6 @@ module.exports = {
 		}
 
 		guildQueue.songs = [];
-		guildQueue.connection.dispatcher.destroy();
-		return true;
+		return guildQueue.connection.dispatcher.destroy();
 	},
 };

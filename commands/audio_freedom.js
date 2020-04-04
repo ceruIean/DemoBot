@@ -1,3 +1,5 @@
+const functions = require("../util/functions.js");
+
 module.exports = {
 	name: "freedom",
 	aliases: [],
@@ -6,9 +8,9 @@ module.exports = {
 	usage: "",
 	guildOnly: false,
 	restricted: false,
-	reaction: "",
+	reaction: "💥",
 
 	execute(message) {
-		message.client.commands.get("audio").execute(message, [ "freedom", 1 << 4 ]);
+		return message.client.commands.get("audio").execute(message, [ functions.getSound("freedom"), 1 << 4 ]);
 	},
 };

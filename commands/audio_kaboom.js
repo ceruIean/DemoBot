@@ -1,4 +1,4 @@
-const functions = require("../functions.js");
+const functions = require("../util/functions.js");
 
 module.exports = {
 	name: "kaboom",
@@ -11,8 +11,8 @@ module.exports = {
 	reaction: "💥",
 
 	execute(message) {
-		message.channel.send("", { files: [functions.getImage("ka_boom.png")] }).then(() => {
-			message.client.commands.get("audio").execute(message, [ "ka_boom", 1 << 4 ]);
+		return message.channel.send("", { files: [functions.getImage("ka_boom.png")] }).then(() => {
+			message.client.commands.get("audio").execute(message, [functions.getSound("ka_boom"), 1 << 4]);
 		});
 	},
 };

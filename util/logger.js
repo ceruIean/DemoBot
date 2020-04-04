@@ -12,6 +12,8 @@ module.exports = {
 	},
 
 	debug(message) {
-		console.log(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][DEBUG] ${message}`);
+		if (process.env.NODE_ENV === "development") {
+			console.log(`[${new Date().toLocaleDateString()}][${new Date().toLocaleTimeString()}][DEBUG] ${message}`);
+		}
 	},
 };

@@ -27,7 +27,6 @@ module.exports = {
 			.setTitle("Now Playing")
 			.setDescription(guildQueue.songs[0].url ? `[${guildQueue.songs[0].title}](${guildQueue.songs[0].url})` : guildQueue.songs[0].title);
 
-		message.channel.send(messageEmbed);
-		return true;
+		return message.channel.send(messageEmbed);
 	},
 };

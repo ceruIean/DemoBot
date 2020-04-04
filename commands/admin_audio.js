@@ -1,9 +1,7 @@
-const functions = require("../functions.js");
-
 module.exports = {
 	name: "audio",
 	aliases: ["a"],
-	description: "ssssssssssssssssssssssss",
+	description: "Plays audio from a local source.",
 	category: "admin",
 	usage: "<name> [volume]",
 	guildOnly: false,
@@ -12,12 +10,12 @@ module.exports = {
 
 	execute(message, args) {
 		const soundName = args[0];
-		const volume = args[1] || 1;
+		const volume = args[1] || false;
+
 		if (message.member && message.member.voice.channel) {
-			message.client.commands.get("play").execute(message, [functions.getSound(soundName), volume]);
+			return message.client.commands.get("play").execute(message, [soundName, volume]);
 		}
-		else {
-			message.channel.send("", { files: [functions.getSound(soundName)] });
-		}
+
+		return message.channel.send("", { files: [soundName] });
 	},
 };

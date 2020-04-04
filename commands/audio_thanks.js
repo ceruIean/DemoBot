@@ -1,4 +1,4 @@
-const functions = require("../functions.js");
+const functions = require("../util/functions.js");
 
 module.exports = {
 	name: "thanks",
@@ -11,11 +11,6 @@ module.exports = {
 	reaction: "",
 
 	execute(message) {
-		if (message.member && message.member.voice.channel) {
-			message.client.commands.get("play").execute(message, [functions.randomSound("thanks", 3)]);
-		}
-		else {
-			message.channel.send("", { files: [functions.randomSound("thanks", 3)] });
-		}
+		return message.client.commands.get("audio").execute(message, [functions.randomSound("thanks", 3)]);
 	},
 };

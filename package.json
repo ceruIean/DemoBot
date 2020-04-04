@@ -4,7 +4,8 @@
   "description": "The demoman from Team Fortress 2 is now on Discord, as a bot.",
   "main": "bot.js",
   "scripts": {
-    "start": "pm2 start bot.js --name \"demobot\" --output logs/output.log --error logs/error.log --wait-ready --shutdown-with-message ",
+    "start": "cross-env NODE_ENV=production pm2 start bot.js -n \"demobot\" -o logs/output.log -e logs/error.log --shutdown-with-message",
+    "test": "cross-env NODE_ENV=development node bot.js",
     "lint": "eslint ."
   },
   "keywords": [
@@ -17,11 +18,17 @@
     "@discordjs/opus": "^0.1.0",
     "bufferutil": "^4.0.1",
     "discord.js": "^12.0.2",
-    "eslint": "^6.8.0",
     "ffmpeg-static": "^4.0.1",
+    "googleapis": "^48.0.0",
     "pm2": "^4.2.3",
     "sodium": "^3.0.2",
     "utf-8-validate": "^5.0.2",
+    "ytdl-core": "^2.0.1",
     "ytdl-core-discord": "^1.1.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "dotenv-flow": "^3.1.0",
+    "eslint": "^6.8.0"
   }
 }

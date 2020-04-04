@@ -1,5 +1,6 @@
 {
-    "token": "https://discordapp.com/developers/applications",
-    "botOwners": ["Discord IDs"],
-    "botPrefix": "-"
+    "admins": [
+        "209368845184532483"
+    ],
+    "prefix": "."
 }

@@ -1,6 +1,6 @@
 module.exports = {
 	name: "skip",
-	aliases: ["next"],
+	aliases: ["sk", "next"],
 	description: "Skips the current audio being played in voicechat.",
 	category: "voice",
 	usage: "",
@@ -21,7 +21,6 @@ module.exports = {
 			return false;
 		}
 
-		guildQueue.connection.dispatcher.destroy();
-		return true;
+		return guildQueue.connection.dispatcher.destroy();
 	},
 };
