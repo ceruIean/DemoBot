@@ -102,11 +102,6 @@ module.exports = {
 		}
 
 		guildQueue.connection.play(audio.stream, { volume: audio.volume, type: audio.type, highWaterMark: 1 << 24 })
-			.on("speaking", value => {
-				if (value) {
-					logger.debug("Started playing audio.");
-				}
-			})
 			.on("finish", () => {
 				guildQueue.audioQueue.shift();
 				this.play(message, guildQueue.audioQueue[0]);
