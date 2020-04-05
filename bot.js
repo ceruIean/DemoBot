@@ -28,7 +28,6 @@ logger.debug(`${[...bot.commands.keys()].join(", ")}\r\n`);
 
 bot.once("ready", () => {
 	logger.info("What makes me a good DemoBot? If I were a bad DemoBot, I wouldn't be sittin' here discussin' it with you, now would I?");
-
 	if (process.env.NODE_ENV === "production") {
 		bot.user.setPresence({ activity: { type: "LISTENING", name: "ya, lad!" }, status: "online" });
 	}
