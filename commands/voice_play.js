@@ -1,5 +1,5 @@
 const fs = require("fs");
-const ytdl = require("ytdl-core");
+const ytdl = require("ytdl-core-discord");
 const logger = require("../util/logger.js");
 
 module.exports = {
@@ -35,11 +35,11 @@ module.exports = {
 					quality: "highestaudio",
 				};
 
-				ytdl.getInfo(args[0], ytdlOptions, (error, info) => {
-					audio.title = info.title;
-					audio.url = info.video_url;
-					audio.stream = ytdl.downloadFromInfo(info, ytdlOptions);
-				});
+				const info = await ytdl.getInfo(args[0], ytdlOptions);
+				audio.title = info.title;
+				audio.url = info.video_url;
+				audio.stream = await ytdl(info.video_url, ytdlOptions);
+				audio.type = "opus";
 			}
 			else {
 				audio.url = audio.stream = args[0];
@@ -71,7 +71,7 @@ module.exports = {
 				guildSession.voiceChannel.join().then(connection => {
 					logger.debug("Connection to voice chat established.");
 					guildSession.connection = connection;
-					this.play(message, guildSession.audioQueue[0]);
+					this.playAudio(message, guildSession.audioQueue[0]);
 				}).catch(error => {
 					logger.error(error);
 					message.client.guildMap.delete(message.guild.id);
@@ -91,7 +91,7 @@ module.exports = {
 		}
 	},
 
-	play(message, audio) {
+	playAudio(message, audio) {
 		const guildQueue = message.client.guildMap.get(message.guild.id);
 
 		if (!audio || !audio.stream || audio.stream.ended || audio.stream.destroyed) {
@@ -103,16 +103,18 @@ module.exports = {
 		guildQueue.connection.play(audio.stream, { volume: audio.volume, type: audio.type, highWaterMark: 1 << 24 })
 			.on("finish", () => {
 				guildQueue.audioQueue.shift();
-				this.play(message, guildQueue.audioQueue[0]);
+				this.playAudio(message, guildQueue.audioQueue[0]);
 			})
 			.on("close", () => {
 				logger.debug("Stopped playing audio.");
 				guildQueue.audioQueue.shift();
-				this.play(message, guildQueue.audioQueue[0]);
+				this.playAudio(message, guildQueue.audioQueue[0]);
 			})
 			.on("error", error => {
 				logger.error(error);
-				message.channel.send(`What just happened?\r\n${error.message}\r\nThanks!`);
+				guildQueue.textChannel.send(`What just happened?\r\n${error.message}\r\nThanks!`);
 			});
+
+		logger.debug("Started playing audio.");
 	},
 };
