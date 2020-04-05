@@ -35,18 +35,16 @@ module.exports = {
 					quality: "highestaudio",
 				};
 
-				const videoInfo = await ytdl.getInfo(args[0], ytdlOptions);
+				const videoInfo = ytdl.getInfo(args[0], ytdlOptions);
 				audio.title = videoInfo.title;
 				audio.url = videoInfo.video_url;
 				audio.stream = ytdl.downloadFromInfo(videoInfo, ytdlOptions);
 			}
 			else {
-				logger.debug("ffmpeg should be ready");
 				audio.url = audio.stream = args[0];
 			}
 		}
 		else {
-			logger.debug("local file");
 			const fileStream = fs.createReadStream(args[0]).on("open", () => {
 				audio.stream = fileStream;
 				audio.type = "ogg/opus";
