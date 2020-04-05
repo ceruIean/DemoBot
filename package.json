@@ -21,7 +21,7 @@
     "googleapis": "^48.0.0",
     "sodium": "^3.0.2",
     "utf-8-validate": "^5.0.2",
-    "ytdl-core": "^2.0.1",
+    "ytdl-core": "2.0.1",
     "ytdl-core-discord": "^1.1.0"
   },
   "devDependencies": {

@@ -35,10 +35,11 @@ module.exports = {
 					quality: "highestaudio",
 				};
 
-				const videoInfo = ytdl.getInfo(args[0], ytdlOptions);
-				audio.title = videoInfo.title;
-				audio.url = videoInfo.video_url;
-				audio.stream = ytdl.downloadFromInfo(videoInfo, ytdlOptions);
+				ytdl.getInfo(args[0], ytdlOptions, (error, info) => {
+					audio.title = info.title;
+					audio.url = info.video_url;
+					audio.stream = ytdl.downloadFromInfo(info, ytdlOptions);
+				});
 			}
 			else {
 				audio.url = audio.stream = args[0];
