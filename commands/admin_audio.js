@@ -6,7 +6,7 @@ module.exports = {
 	usage: "<name> [volume]",
 	guildOnly: false,
 	restricted: true,
-	reaction: "",
+	reaction: "🎵",
 
 	execute(message, args) {
 		const soundName = args[0];

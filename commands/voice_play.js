@@ -46,14 +46,14 @@ module.exports = {
 			}
 		}
 		else {
-			const fileStream = fs.createReadStream(args[0]).on("open", () => {
-				audio.stream = fileStream;
-				audio.type = "ogg/opus";
-			}).on("error", error => {
+			const fileStream = fs.createReadStream(args[0]).on("error", error => {
 				logger.error(error.message);
 				message.channel.send("Where the bloody hell is that?");
 				return false;
 			});
+
+			audio.stream = fileStream;
+			audio.type = "ogg/opus";
 		}
 
 		if (audio.stream) {
@@ -73,14 +73,15 @@ module.exports = {
 					guildSession.connection = connection;
 					this.playAudio(message, guildSession.audioQueue[0]);
 				}).catch(error => {
-					logger.error(error);
+					logger.error(error.message);
+					guildSession.textChannel.send(`What just happened?\r\n${error.message}\r\nCheers!`);
 					message.client.guildMap.delete(message.guild.id);
 					return false;
 				});
 			}
 			else {
 				if (audio.url) {
-					logger.debug(`Queued audio ${audio.title}`);
+					logger.debug(`Queued "${audio.title}"`);
 					message.channel.send(`"${audio.title}" is comin' up, lad!`);
 				}
 				guildQueue.audioQueue.push(audio);
@@ -102,19 +103,20 @@ module.exports = {
 
 		guildQueue.connection.play(audio.stream, { volume: audio.volume, type: audio.type, highWaterMark: 1 << 24 })
 			.on("finish", () => {
+				logger.debug(`Finished playing "${audio.title}"`);
 				guildQueue.audioQueue.shift();
 				this.playAudio(message, guildQueue.audioQueue[0]);
 			})
 			.on("close", () => {
-				logger.debug("Stopped playing audio.");
+				logger.debug(`Stopped playing "${audio.title}"`);
 				guildQueue.audioQueue.shift();
 				this.playAudio(message, guildQueue.audioQueue[0]);
 			})
 			.on("error", error => {
-				logger.error(error);
-				guildQueue.textChannel.send(`What just happened?\r\n${error.message}\r\nThanks!`);
+				logger.error(error.message);
+				guildQueue.textChannel.send(`What just happened?\r\n${error.message}\r\nCheers!`);
 			});
 
-		logger.debug("Started playing audio.");
+		logger.debug(`Started playing "${audio.title}"`);
 	},
 };

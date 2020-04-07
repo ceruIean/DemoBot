@@ -8,7 +8,7 @@ module.exports = {
 	usage: "",
 	guildOnly: false,
 	restricted: false,
-	reaction: "👎",
+	reaction: "🖕",
 
 	execute(message) {
 		return message.client.commands.get("audio").execute(message, [functions.randomSound("jeers", 8)]);
