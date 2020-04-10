@@ -5,7 +5,7 @@ const logger = require("../util/logger.js");
 module.exports = {
 	name: "prefix",
 	aliases: ["pre"],
-	description: "Used to change bot command prefix.",
+	description: "Changes bot command prefix.",
 	category: "admin",
 	usage: "<new>",
 	guildOnly: false,
@@ -21,7 +21,6 @@ module.exports = {
 			const config = JSON.parse(fileSystem.readFileSync("./config.json"));
 			config.prefix = args[0];
 			message.client.bot = new client(config);
-			// fileSystem.writeFileSync("./config.json", JSON.stringify(config, null, 4));
 		}
 		catch (error) {
 			logger.error(error.message);

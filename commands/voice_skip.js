@@ -1,7 +1,7 @@
 module.exports = {
 	name: "skip",
 	aliases: ["sk", "next"],
-	description: "Skips the current audio being played in voicechat.",
+	description: "Skips the current audio.",
 	category: "voice",
 	usage: "",
 	guildOnly: true,

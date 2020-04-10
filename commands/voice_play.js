@@ -4,10 +4,10 @@ const logger = require("../util/logger.js");
 
 module.exports = {
 	name: "play",
-	aliases: ["pl"],
-	description: "I'll join your voice channel and sing ya something, lad!",
+	aliases: ["p"],
+	description: "Plays audio from an external source. (YouTube or remote file)",
 	category: "voice",
-	usage: "<url> [volMult]",
+	usage: "<url> [volume]",
 	guildOnly: true,
 	restricted: false,
 	reaction: "▶️",

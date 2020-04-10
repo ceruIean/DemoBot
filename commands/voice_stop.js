@@ -1,7 +1,7 @@
 module.exports = {
 	name: "stop",
 	aliases: ["st", "leave"],
-	description: "Stops playing audio from voicechat and leaves the channel.",
+	description: "Stops playing audio and leaves the channel.",
 	category: "voice",
 	usage: "",
 	guildOnly: true,

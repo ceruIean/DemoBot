@@ -1,9 +1,9 @@
 const discord = require("discord.js");
 
 module.exports = {
-	name: "nowplaying",
-	aliases: ["np"],
-	description: "hohohohoho",
+	name: "info",
+	aliases: ["track"],
+	description: "Displays information about playing audio.",
 	category: "voice",
 	usage: "",
 	guildOnly: true,
