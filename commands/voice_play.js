@@ -32,7 +32,6 @@ module.exports = {
 			if (ytdl.validateURL(args[0])) {
 				const ytdlOptions = {
 					filter: "audioonly",
-					quality: "highestaudio",
 				};
 
 				const info = await ytdl.getInfo(args[0], ytdlOptions);
@@ -101,7 +100,7 @@ module.exports = {
 			return false;
 		}
 
-		const dispatcher = guildQueue.connection.play(audio.stream, { type: audio.type, highWaterMark: 1 << 24 })
+		guildQueue.connection.play(audio.stream, { volume: audio.volume, type: audio.type, highWaterMark: 1 << 6 })
 			.on("finish", () => {
 				logger.debug(`Finished playing "${audio.title}"`);
 				guildQueue.audioQueue.shift();
@@ -116,8 +115,7 @@ module.exports = {
 				logger.error(error.message);
 				guildQueue.textChannel.send(`What just happened?\r\n${error.message}\r\nCheers!`);
 			});
-		
-		dispatcher.setVolumeLogarithmic(audio.volume);
+
 		logger.debug(`Started playing "${audio.title}"`);
 	},
 };
