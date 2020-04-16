@@ -3,7 +3,7 @@ const discord = require("discord.js");
 module.exports = {
 	name: "info",
 	aliases: ["track"],
-	description: "Displays information about playing audio.",
+	description: "Displays information about current audio.",
 	category: "voice",
 	usage: "",
 	guildOnly: true,
@@ -25,7 +25,7 @@ module.exports = {
 
 		const messageEmbed = new discord.MessageEmbed()
 			.setTitle("Now Playing")
-			.setDescription(guildQueue.songs[0].url ? `[${guildQueue.songs[0].title}](${guildQueue.songs[0].url})` : guildQueue.songs[0].title);
+			.setDescription(guildQueue.audioQueue[0].url ? `[${guildQueue.audioQueue[0].title}](${guildQueue.audioQueue[0].url})` : guildQueue.audioQueue[0].title);
 
 		return message.channel.send(messageEmbed);
 	},

@@ -61,6 +61,7 @@ module.exports = {
 					textChannel: message.channel,
 					voiceChannel: message.member.voice.channel,
 					connection: null,
+					dispatcher: null,
 					audioQueue: [],
 				};
 
@@ -100,7 +101,16 @@ module.exports = {
 			return false;
 		}
 
-		guildQueue.connection.play(audio.stream, { volume: audio.volume, type: audio.type, highWaterMark: 1 << 6 })
+		const options = {
+			highWaterMark: 1 << 6,
+			type: audio.type,
+		};
+
+		if (!audio.volume) {
+			options.volume = false;
+		}
+
+		guildQueue.dispatcher = guildQueue.connection.play(audio.stream, options)
 			.on("finish", () => {
 				logger.debug(`Finished playing "${audio.title}"`);
 				guildQueue.audioQueue.shift();
@@ -115,6 +125,10 @@ module.exports = {
 				logger.error(error.message);
 				guildQueue.textChannel.send(`What just happened?\r\n${error.message}\r\nCheers!`);
 			});
+
+		if (options.volume) {
+			guildQueue.dispatcher.setVolumeLogarithmic((options.volume || 1) >> 1);
+		}
 
 		logger.debug(`Started playing "${audio.title}"`);
 	},
